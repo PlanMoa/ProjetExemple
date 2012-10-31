@@ -1,0 +1,65 @@
+Références:
+http://java.dzone.com/articles/resource-optimization-quick
+
+http://docs.jboss.org/drools/release/5.4.0.CR1/drools-planner-docs/html/plannerConfiguration.html#d0e2477
+
+http://docs.jboss.org/drools/release/5.4.0.CR1/drools-planner-docs/html/quickStart.html
+
+------------------------------------------------------------------------------------------------------------------------
+Comment résoudre un problème de plannification : Méthodologie en 5 étapes.
+
+    Définir son modèle de domaine
+    Configurer un solver
+    Charger les données du problème et les confier au solver Solver.setPlanningProblem(...)
+    Résoudre le problème.
+    Solver.solve()
+    Obtenir la meilleure solution avec Solver.getBestSolution()
+
+----------------------------------------------------------------------------------------------------------------------
+Définition du modèle de domaine
+
+On utilise les classes suivantes:
+
+-Intervenant: réprésente un intervenant ayant une profession (ex:Infirmière, Médecin, kinésithérapeute) et une durée d’intervention prévue dans la semaine.
+
+Attributs: typeIntervenant (int)
+        dureeIntervention(int)
+         prime(int)
+
+
+Note: on désignera les intevenants par un numéro plutôt.
+
+-Intervention: représente une intervention requise
+
+Attributs: typeIntervenantDemande(int)
+       dureeInterventionDemande(int)
+
+-RepartirIntervention: contient toutes les données du problème
+
+
+Expression des contraintes
+
+Contraintes dures (contraintes que l’on ne peut enfreindre):
+
+La dure d’intervention d’un intervenant doit être être au moins égale à la somme des durées interventions qui sont requises (en clair, l’intervenant doit au moins respecter sa durée d’intervention prévue initialement).
+
+On choisit l’intervenant qui correspond au mieux au type d’intervention demandé.
+(Par exemple, si on demande l’intervention d’une infirmière on ne prendra pas un kinésithérapeute!!)
+
+Contrainte souple (contrainte que l’on peut enfreindre):
+On accorde une prime pour des heures sup.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
