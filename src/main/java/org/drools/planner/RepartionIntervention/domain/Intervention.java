@@ -59,6 +59,6 @@ public class Intervention {
 	
 	//etiquetage intervention
 	public String getLabel() {
-		return "Ce qu'on demande, comme intervenant " + typeIntervenantDemande + ", comme durée requise: " + intervenant + " heures ";
+		return "l'intervenant: " + typeIntervenantDemande + " doit effectuer: " + dureeInterventionDemande + " heures. ";
 		}
 }

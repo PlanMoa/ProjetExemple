@@ -34,7 +34,7 @@ public class Intervenant {
 	
 	//etiquetage intervenant
 	public String getLabel() {
-		return "profession " + typeIntervenant + " durée/semaine " + dureeIntervention +" heures " ;
+		return "Intervenant: " + typeIntervenant + " Durée/semaine: " + dureeIntervention +" heures. " ;
 				
 	}
 
