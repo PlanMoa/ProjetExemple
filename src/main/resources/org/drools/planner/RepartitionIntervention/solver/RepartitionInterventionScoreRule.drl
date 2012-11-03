@@ -7,30 +7,61 @@ import org.drools.planner.core.score.buildin.hardandsoft.HardAndSoftScoreHolder;
 import org.drools.planner.core.score.constraint.IntConstraintOccurrence;
 import org.drools.planner.core.score.constraint.ConstraintType;
 
-org.drools.planner.RepartionIntervention.domain.Intervenant;
-org.drools.planner.RepartionIntervention.domain.Intervention;
-org.drools.planner.RepartionIntervention.domain.domain.RepartirIntervention;
+import org.drools.planner.RepartitionIntervention.domain.Intervenant;
+import org.drools.planner.RepartitionIntervention.domain.Intervention;
+import org.drools.planner.RepartitionIntervention.domain.RepartirIntervention;
 
 global HardAndSoftScoreHolder scoreHolder;
 
 // ############################################################################
-// Hard constraints
+// Hard constraints (à revoir)
 // ############################################################################
 
-//A implementer
+rule "totalDureeInterventionDemande"
+    when
+        $intervenant : Intervenant($dureeIntervention : dureeIntervention)
+        //on fait la somme des durées d'intervention demandées
+        $totalDureeInterventionDemande : Number(intValue > $dureeIntervention) from accumulate(
+			Intervention(
+                intervenant == $intervenant,
+                $dureeInterventionDemande : dureeInterventionDemande),
+            sum($dureeInterventionDemande)
+        )
+    then
+       insertLogical(new IntConstraintOccurrence("totalDureeInterventionDemande", ConstraintType.NEGATIVE_HARD,
+                8,
+                $intervenant));
+end
+
+rule "sameIntervenant"
+    when  	
+        $intervenant : Intervenant($typeIntervenant : typeIntervenant)
+    	$intervention: Intervention (typeIntervenantDemande==$typeIntervenant)
+    then
+        insertLogical(new IntConstraintOccurrence("sameIntervenant", ConstraintType.NEGATIVE_HARD,
+               3,
+                $intervenant));
+end
 
 // ############################################################################
-// Soft constraints
+// Soft constraints (à revoir)
 // ############################################################################
 
-//A implementer
+rule "primeIntervenant"
+    when
+        $intervention : Intervention($typeIntervenantDemande : typeIntervenantDemande, $dureeInterventionDemande:dureeInterventionDemande>40) 
+    then
+        insertLogical(new IntConstraintOccurrence("primeIntervenant", ConstraintType.NEGATIVE_SOFT,
+                $intervention));
+		System.out.println("Prime accordée pour l'intervenant "+ $typeIntervenantDemande);
+end
 
 // ############################################################################
 // Calculate score
 // ############################################################################
 
 // Accumulate hard constraints
-rule "hardConstraintsBroken"
+rule hardConstraintsBroken
         salience -1 // Do the other rules first (optional, for performance)
     when
         $hardTotal : Number() from accumulate(
@@ -42,7 +73,7 @@ rule "hardConstraintsBroken"
 end
 
 // Accumulate soft constraints
-rule "softConstraintsBroken"
+rule softConstraintsBroken
         salience -1 // Do the other rules first (optional, for performance)
     when
         $softTotal : Number() from accumulate(
